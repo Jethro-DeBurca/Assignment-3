@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Start of the head tag -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Setting webpage name displayed on the browser tab -->
     <title>Vue Mastery | Product App</title>
+<!-- Linking my css -->
     <link href="./css/css.css" rel="stylesheet">
 </head>
+<!-- Start of the body tag -->
 <body>
-    <div class="nav-bar"></div>
-
+<!-- Creating my navigation bar -->
+    <nav class="nav-bar">
+      <a class="navbar-brand">
+        <img src="./assets/new_logo.png" alt="Logo" style="width:142px;">
+      </a>
+    </nav>
+<!-- Adding my javascript app -->
     <div id="app">
       <div class="cart">
-        <p>Cart({{ cart.length }})</p>
+        <p>My Cart ({{ cart.length }})</p>
       </div>
       <product :premium="premium" @add-to-cart="updateCart"></product>
     </div> 
-    
+<!-- Linking vue.js, and my main javascript file -->   
      <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
     <script src="main.js"></script>
 </body>

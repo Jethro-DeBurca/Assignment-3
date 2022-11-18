@@ -1,5 +1,5 @@
 var eventBus = new Vue()
-
+// Creating the product component
 Vue.component('product', {
     props: {
       premium: {
@@ -7,11 +7,12 @@ Vue.component('product', {
         required: true
       }
     },
+// Creating my product html layout using a vue template
     template: `
      <div class="product">
           
         <div class="product-image">
-          <img :src="image" />
+          <img :src="image" class="img"/>
         </div>
   
         <div class="product-info">
@@ -42,30 +43,42 @@ Vue.component('product', {
       
       </div>
      `,
+// Filling out my product data with product information
     data() {
       return {
-          product: 'Chair',
-          brand: 'Vue Mastery',
+          product: 'Mesh back chair',
+          brand: 'Chair & Chair',
           selectedVariant: 0,
           details: ['Made in India', '100% solid plastic frame', 'Gender-neutral'],
           variants: [
+// First colour data
             {
               variantId: 2234,
               variantColor: 'green',
               variantImage: './assets/green.jpg',
               variantQuantity: 10     
             },
+// Second colour data
             {
               variantId: 2235,
               variantColor: 'black',
               variantImage: './assets/black.jpg',
-              variantQuantity: 0     
+              variantQuantity: 3     
+            },
+// Third colour data
+            {
+              variantId: 2236,
+              variantColor: 'red',
+              variantImage: './assets/red.jpg',
+              variantQuantity: 5     
             }
           ],
           reviews: []
       }
     },
+// Filling out my product template with javascript methods
       methods: {
+// Creating my addToCart method, so it can be called by my onClick event to add product to cart
         addToCart() {
             this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
         },
@@ -73,6 +86,7 @@ Vue.component('product', {
             this.selectedVariant = index
         }
       },
+// Filling out my product template with javascript data
       computed: {
           title() {
               return this.brand + ' ' + this.product  
@@ -90,6 +104,7 @@ Vue.component('product', {
               return 2.99
           }
       },
+// Creating my mounted method, so it can be called by my onClick event to post my review
       mounted() {
         eventBus.$on('review-submitted', productReview => {
           this.reviews.push(productReview)
@@ -98,7 +113,11 @@ Vue.component('product', {
   })
 
 
+
+
+// Creating the product-review sub-component
   Vue.component('product-review', {
+// Creating my product-review html layout using a vue template
     template: `
     <form class="review-form" @submit.prevent="onSubmit">
 
@@ -129,6 +148,7 @@ Vue.component('product', {
   
     </form>
     `,
+// Filling out my product-review template with javascript data
     data() {
       return {
         name: null,
@@ -160,6 +180,10 @@ Vue.component('product', {
     }
   })
 
+
+
+
+// Creating the product-tabs sub-component
   Vue.component('product-tabs', {
     props: {
       reviews: {
@@ -167,6 +191,7 @@ Vue.component('product', {
         required: false
       }
     },
+// Creating my product-tabs html layout using a vue template
     template: `
       <div>
       
@@ -196,6 +221,7 @@ Vue.component('product', {
     
       </div>
     `,
+// Filling out my product-tabs template with javascript data
     data() {
       return {
         tabs: ['Reviews', 'Make a Review'],
@@ -204,6 +230,10 @@ Vue.component('product', {
     }
   })
 
+
+
+
+// Creating the info-tabs sub-component
 Vue.component('info-tabs', {
     props: {
       shipping: {
@@ -214,6 +244,7 @@ Vue.component('info-tabs', {
         required: true
       }
     },
+// Creating my info-tabs html layout using a vue template
     template: `
       <div>
       
@@ -238,6 +269,7 @@ Vue.component('info-tabs', {
     
       </div>
     `,
+// Filling out my info-tabs template with javascript data
     data() {
       return {
         tabs: ['Shipping', 'Details'],
@@ -248,7 +280,8 @@ Vue.component('info-tabs', {
 
 
 
-  
+
+// Creating the app app to be called in index.html
   var app = new Vue({
       el: '#app',
       data: {

@@ -6,7 +6,7 @@ body {
   
   .nav-bar {
     background: linear-gradient(-90deg, #ffffff, #000000);
-    height: 60px;
+    height: 80px;
     margin-bottom: 15px;
   }
 
@@ -16,7 +16,7 @@ body {
     padding: 1rem;
   }
 
-  img {
+  .img {
     border: 1px solid #d8d8d8;
     width: 70%;
     margin: 40px;
