@@ -5,25 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Setting webpage name displayed on the browser tab -->
-    <title>Vue Mastery | Product App</title>
+    <title>Jethro De Burcas Assignment 3</title>
 <!-- Linking my css -->
-    <link href="./css/css.css" rel="stylesheet">
+    <link href="./css.css" rel="stylesheet">
 </head>
 <!-- Start of the body tag -->
 <body>
-<!-- Creating my navigation bar -->
-    <nav class="nav-bar">
-      <a class="navbar-brand">
-        <img src="./assets/new_logo.png" alt="Logo" style="width:142px;">
-      </a>
-    </nav>
-<!-- Adding my javascript app -->
+<!-- Adding my javascript "app" -->
     <div id="app">
-      <div class="cart">
-        <p>My Cart ({{ cart.length }})</p>
+      <div class="nav-bar">
+        <a class="navbar-brand">
+          <img src="./assets/new_logo.png" alt="Logo" style="width:160px;">
+        </a>
+        <div class="nav-bar__inner">
+          <button @click="toggleCartContent" 
+                  class="cart" 
+                  title="Show or hide cart content.">
+            <span v-if="cart.length">Items in Cart: {{ cart.length }}</span>
+            <span v-else>No items in your cart.</span>
+          </button>
+        </div>
       </div>
-      <product :premium="premium" @add-to-cart="updateCart"></product>
+      <cart-content 
+      :show-cart-content="showCartContent"
+      :items="cart">
+      </cart-content>
+      <product 
+      :premium="premium" @add-to-cart="updateCart">
+      </product>
     </div> 
+
+    <footer class="footer">
+      <div class="container">
+        <p>Jethro's Assignment-3 built with help from Vue mastery.</p>
+      </div>
+    </footer>
+    
 <!-- Linking vue.js, and my main javascript file -->   
      <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
     <script src="main.js"></script>

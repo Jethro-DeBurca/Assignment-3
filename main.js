@@ -1,3 +1,4 @@
+// eventBus allows us to share data from one component to another
 var eventBus = new Vue()
 // Creating the product component
 Vue.component('product', {
@@ -51,23 +52,26 @@ Vue.component('product', {
           selectedVariant: 0,
           details: ['Made in India', '100% solid plastic frame', 'Gender-neutral'],
           variants: [
-// First colour data
+// First colour data binding
             {
               variantId: 2234,
+              variantPrice: 99.99,
               variantColor: 'green',
               variantImage: './assets/green.jpg',
               variantQuantity: 10     
             },
-// Second colour data
+// Second colour data binding
             {
               variantId: 2235,
+              variantPrice: 99.99,
               variantColor: 'black',
               variantImage: './assets/black.jpg',
               variantQuantity: 3     
             },
-// Third colour data
+// Third colour data binding
             {
               variantId: 2236,
+              variantPrice: 99.99,
               variantColor: 'red',
               variantImage: './assets/red.jpg',
               variantQuantity: 5     
@@ -79,14 +83,21 @@ Vue.component('product', {
 // Filling out my product template with javascript methods
       methods: {
 // Creating my addToCart method, so it can be called by my onClick event to add product to cart
-        addToCart() {
-            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
+        addToCart: function() {
+
+         let cartItem = {
+         product: this.product,
+         variant: this.variants[this.selectedVariant].variantId,
+         color: this.variants[this.selectedVariant].variantColor,
+         price: this.variants[this.selectedVariant].variantPrice,
+         };
+            this.$emit('add-to-cart', cartItem);
         },
         updateProduct(index) {  
             this.selectedVariant = index
         }
       },
-// Filling out my product template with javascript data
+// Creating my getters in order to display my binded data in my component template
       computed: {
           title() {
               return this.brand + ' ' + this.product  
@@ -148,7 +159,7 @@ Vue.component('product', {
   
     </form>
     `,
-// Filling out my product-review template with javascript data
+// Creating my 
     data() {
       return {
         name: null,
@@ -158,6 +169,7 @@ Vue.component('product', {
       }
     },
     methods: {
+// Creating my onSubmit method to validate/create a review from user input data
       onSubmit() {
         this.errors = []
         if (this.name && this.review && this.rating) {
@@ -171,6 +183,7 @@ Vue.component('product', {
           this.review = null
           this.rating = null
         }
+// If data field (name, review, or rating) == null (starting value), the review can't be submitted.
         else {
           if(!this.name) this.errors.push("Name required.")
           if(!this.review) this.errors.push("Review required.")
@@ -221,7 +234,8 @@ Vue.component('product', {
     
       </div>
     `,
-// Filling out my product-tabs template with javascript data
+// Creating my review tabs to display only data from only one tab at a time.
+// This is done by binding the last Clicked tab as the selected tab.
     data() {
       return {
         tabs: ['Reviews', 'Make a Review'],
@@ -278,19 +292,90 @@ Vue.component('info-tabs', {
     }
   })
 
+// Start of shpping cart ---------------
+Vue.component('cart-content', {
+  props: {
+    showCartContent: {
+      type: Boolean,
+      required: true,
+    },
+    items: {
+      type: Array,
+      required: false
+    }
+  },
+  template: `
+    <div v-show="showCartContent" class="cart-content">
+      <button @click="hideCartContent" class="cart-content__close">Close</button>
 
+      <h2 class="cart-content__title">Your cart</h2>
 
+      <table v-if="items.length" class="cart-items">
+        <thead class="cart-items__head">
+          <tr>
+            <th class="cart-items__num-label">Num.</th>
+            <th class="cart-items__product-label">Item</th>
+            <th class="cart-items__price-label">Price</th>
+            <th class="cart-items__action">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in items">
+            <td>{{index + 1}}.</td>
+            <td class="cart-items__product">{{item.product}} – {{item.color}}</td>
+            <td class="cart-items__price">$ {{item.price}}</td>
+            <td class="cart-items__action">
+              <button @click="deleteItem(index, item.variant)">
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan=2>Total:</td>
+            <td class="cart-items__total">$ {{cartTotal}}</td>
+            <td class="cart-items__action"></td>
+          </tr>
+        </tfoot>
+      </table>
 
-// Creating the app app to be called in index.html
-  var app = new Vue({
-      el: '#app',
-      data: {
-        premium: true,
-        cart: []
-      },
-      methods: {
-        updateCart(id) {
-          this.cart.push(id)
-        }
-      }
-  })
+      <p v-else>No items in your cart.</p>
+    </div>
+  `,
+  methods: {
+    hideCartContent() {
+      this.$root.showCartContent = false;
+    },
+    deleteItem(index, variant) {
+      this.$root.cart.splice(index, 1);
+      eventBus.$emit('cart-item-deleted', variant);
+    }
+  },
+  computed: {
+    cartTotal() {
+      return this.items.reduce((total, item) => total + item.price, 0).toFixed(2);
+    }
+  }
+})
+
+// Creating the vue app instance to be called in index.html
+  var app = new Vue({ 
+// Vue instance with options object passed as parameter.
+  el: '#app',
+  data: {
+    premium: true,
+    showCartContent: false,
+    cart: [],
+  },
+  methods: {
+    updateCart(item) {
+      this.cart.push(item);
+    },
+    toggleCartContent() {
+      this.showCartContent = !this.showCartContent;
+    }
+  }
+})
+
+Vue.config.devtools = true;
